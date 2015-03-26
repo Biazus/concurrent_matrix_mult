@@ -5,23 +5,30 @@
 #include <unistd.h>
 
 int g;
-
+int col;
+int current_line = 2;//inicializado com a primeira linha da matriz
+int current_column = 0;//primeira coluna da matriz
 int convert_file_to_c(){
     FILE *input;
     char *mode = "r", *line = NULL;
     size_t len = 0;
     ssize_t read;
-    input=fopen("teste.txt", mode);
+    input=fopen("in1.txt", mode);
     if (input==NULL){
 	printf("Erro ao ler arquivo\n");
         return 0;
     }
+
+    //lê a linha do primeiro arquivo
     while((read = getline(&line, &len, input)) != -1){
 	//****executar parser aqui
 	printf("Linha de tamanho %zu :\n", read);
         printf("%s", line);
 	//****
     }
+    //lê coluna do segundo arquivo
+    //TODO
+	
     fclose(input);
     if(line)
 	free(line);
@@ -43,7 +50,11 @@ int main( int argc, char **argv) {
     pthread_t *tid;
     int n = 10;
     int nthr = 2, i=0; //numero de threads a serem criadas (param)
- 
+    int number_of_rows = 2;//chamar metodo paraler esse valor
+    int number_of_columns = 2;//chamar metodo tambem
+
+    int (*matrix)[number_of_columns] = (int(*)[number_of_columns]) malloc(sizeof(int)*number_of_rows*number_of_columns);
+	
     if (!convert_file_to_c()){
 	return 0;
     }
