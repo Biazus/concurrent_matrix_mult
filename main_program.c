@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
@@ -7,17 +8,29 @@ int g;
 
 int convert_file_to_c(){
     FILE *input;
-    char *mode = "r";
+    char *mode = "r", *line = NULL;
+    size_t len = 0;
+    ssize_t read;
     input=fopen("teste.txt", mode);
     if (input==NULL){
 	printf("Erro ao ler arquivo\n");
         return 0;
     }
+    while((read = getline(&line, &len, input)) != -1){
+	//****executar parser aqui
+	printf("Linha de tamanho %zu :\n", read);
+        printf("%s", line);
+	//****
+    }
+    fclose(input);
+    if(line)
+	free(line);
     return 1;
 
 }
 
 void *calculate(void *arg) {
+//Funcao que calcula linha x coluna
     int i, n = *(int *) arg;
     for(i = 0; i < n; i++){
         g = i;
@@ -29,7 +42,7 @@ int main( int argc, char **argv) {
 //    pthread_t th1, th2;
     pthread_t *tid;
     int n = 10;
-    int nthr = 1, i=0; //numero de threads a serem criadas (param)
+    int nthr = 2, i=0; //numero de threads a serem criadas (param)
  
     if (!convert_file_to_c()){
 	return 0;
@@ -42,5 +55,5 @@ int main( int argc, char **argv) {
     for (i = 0; i < nthr; i++)
        pthread_join(tid[i], NULL);
 	
-	printf("acabando...\n");
+    printf("\nEncerrando programa...\n");
 }
