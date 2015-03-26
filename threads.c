@@ -1,10 +1,18 @@
+/*
+Names:FELIPE BUENO DA ROSA
+      MILLER BIAZUS
+      PEDRO HENRIQUE FROZI DE CASTRO E SOUZA
+
+Operating Systems 2 - Prof Alberto
+THREADS
+*/
+
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-//http://stackoverflow.com/questions/23858139/dynamically-allocate-matrix-c-for-multiplication
 
 int g;
 int col;
@@ -24,7 +32,7 @@ int convert_file_to_c(char *filename, int row, int col, int matrix[row][col]){
         return 0;
     }
     
-    //lê a linha do primeiro arquivo
+    //lê a linha do arquivo
     while((read = getline(&line, &len, input)) != -1){
 	//****criar o parser aqui -- TODO
 	//printf("Linha de tamanho %zu :\n", read);
