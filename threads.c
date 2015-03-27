@@ -7,12 +7,12 @@ Operating Systems 2 - Prof Alberto
 THREADS
 */
 
-
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 int g;
 int col;
@@ -24,22 +24,48 @@ int number_of_columns = 0;//chamar metodo tambem
 int convert_file_to_c(char *filename, int row, int col, int matrix[row][col]){
     FILE *input;
     char *mode = "r", *line = NULL;
+    char* token=NULL; //auxiliar para capturar cada valor de col da matriz
+    char* line_copy=NULL;  //copia a string da linha pois strtok modifica a string
     size_t len = 0;
     ssize_t read;
+    int row_counter=0, col_counter=0;
     input=fopen(filename, mode);
     if (input==NULL){
 	printf("Erro ao ler arquivo\n");
         return 0;
     }
     
+    //para pegar as duas primeiras linhas que nao sao importantes aqui    
+    read = getline(&line, &len, input);
+    read = getline(&line, &len, input);
+
     //lê a linha do arquivo
     while((read = getline(&line, &len, input)) != -1){
-	//****criar o parser aqui -- TODO
-	//printf("Linha de tamanho %zu :\n", read);
-        //printf("%s", line);
-	//****
-    }
+	line_copy = strdup(line);//copia para nova string
+	token = strtok(line_copy, " ");
+	while(token!=NULL){
+	    matrix[row_counter][col_counter]=atoi(token);
+		
+	    token = strtok(NULL, " ");
+	    col_counter+=1;
+	}
+	row_counter+=1;
+        col_counter=0;
+
+	if(line_copy)
+	    free(line_copy);
 	
+    }
+	int i=0,j=0;
+    
+    //print na matriz para debug
+    printf("\nMATRIZ:\n");
+    for(i=0;i<row;i++){
+	for (j=0;j<col;j++)
+		printf("%d\t", matrix[i][j]);
+        printf("\n");
+    }
+
     fclose(input);
     if(line)
 	free(line);
