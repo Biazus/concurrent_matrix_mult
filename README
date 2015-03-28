@@ -1,4 +1,4 @@
-PARA RODAR O PROGRAMA EXECUTE O SCRIPT runner.sh NA PASTA tests:
+PARA RODAR O PROGRAMA EXECUTE O SCRIPT runner.sh DE DENTRO DA PASTA tests:
 
 $ bash runner.sh
 

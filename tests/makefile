@@ -1,4 +1,4 @@
-all: run libutil threads.o parser.o 
+all: run libutil threads.o parser.o clean 
 
 run: libutil
 	@gcc -g -o ../bin/run run.c -L../lib -lutil -Wall -lrt
