@@ -11,48 +11,131 @@ THREADS
 #include "../include/threads.h"
 
 int setup(int nthr){
-//    pthread_t th1, th2;
-    number_of_columns = 0;//chamar metodo tambem
-    number_of_rows = 0;//chamar metodo paraler esse valor
-    int n = 10;
-    int i=0; //auxiliar para percorrer laço
+        
     pthread_t *tid;
     
-    if (!get_row_and_column("../tests/in1.txt", "../tests/in2.txt")){
-        return 1;
+    matrix_in1 = (tmatrix_t*)malloc(sizeof(tmatrix_t));
+    matrix_in2 = (tmatrix_t*)malloc(sizeof(tmatrix_t));
+    matrix_result = (tmatrix_t*)malloc(sizeof(tmatrix_t));
+    
+    if(get_row_and_column(FILE_IN1, matrix_in1) != READ_FILE_OK){
+        
+        printf("Erro ao ler header do arquivo in1.");
+        return SETUP_ERROR;
     }
-	
-    //alocaçao das matrizes em memoria
-    int (*matrix_a)[number_of_columns] = (int(*)[number_of_columns]) malloc(sizeof(int)*number_of_rows*number_of_columns);
-    int (*matrix_b)[number_of_rows] = (int(*)[number_of_rows]) malloc(sizeof(int)*number_of_columns*number_of_rows);
-
-	//coloca a primeira matriz de arquivo em memoria
-    if (!convert_file_to_c("in1.txt", number_of_rows, number_of_columns, matrix_a)){
-	return 0;
-    }
-	//coloca a segunda matriz de arquivo em memoria
-    if (!convert_file_to_c("in2.txt", number_of_columns, number_of_rows, matrix_b)){
-	return 0;
+	if(get_row_and_column(FILE_IN2, matrix_in2) != READ_FILE_OK){
+        
+        printf("Erro ao ler  header do arquivo in2.");
+        return SETUP_ERROR;
+        
     }
     
+    if(matrix_in1->rows != matrix_in2->columns){
+        printf("Quantidade de linhas em in1 diferente da quantidade de colunas em in2.");
+        return SETUP_ERROR;
+    }
+    if(matrix_in1->columns != matrix_in2->rows){
+        printf("Quantidade de linhas em in2 diferente da quantidade de colunas em in1.");
+        return SETUP_ERROR;
+    }
+    
+    matrix_result->rows = matrix_in1->rows;
+    matrix_result->columns = matrix_in2->columns;
+    
+    create_matrix(matrix_in1);
+    create_matrix(matrix_in2);
+    
+    create_matrix(matrix_result);
+    int i,j;
+    for(i=0;i<matrix_result->rows;i++){
+        for(j=0;j<matrix_result->columns;j++){
+            matrix_result->matrix[i][j]=0;
+        }
+    }
+    
+    
+    int ret;
+    
+    ret = convert_file_to_matrix(FILE_IN1, matrix_in1);
+    
+    if (ret != READ_FILE_OK){
+        switch(ret){
+            case READ_FILE_ERROR:{
+                printf("Erro ao abrir arquivo in1."); 
+                break;
+            }
+            case READ_COLUMNS_ERROR:{
+                printf("Erro ao ler colunas da matrix in1."); 
+                break;
+            }
+            case READ_ROWS_ERROR:{
+                printf("Erro ao ler linhas da matrix in1."); 
+                break;
+            }
+            default:{
+                printf("Erro desconhecido ao ler matrix in1."); 
+                break;
+            }
+        }
+        
+        return SETUP_ERROR;
+    }
+    print_matrix(matrix_in1);
+    
+    ret = convert_file_to_matrix(FILE_IN2, matrix_in2);
+    if (ret != READ_FILE_OK){
+        switch(ret){
+            case READ_FILE_ERROR:{
+                printf("Erro ao abrir arquivo in2."); 
+                break;
+            }
+            case READ_COLUMNS_ERROR:{
+                printf("Erro ao ler colunas da matrix in2."); 
+                break;
+            }
+            case READ_ROWS_ERROR:{
+                printf("Erro ao ler linhas da matrix in2."); 
+                break;
+            }
+            default:{
+                printf("Erro desconhecido ao ler matrix in2."); 
+                break;
+            }
+        }
+        
+        return SETUP_ERROR;
+    }
+    print_matrix(matrix_in2);
+    
+    
+    printf("\n\nIniciando execucao - algoritmo calculate_rowsset...\n");
+    startClock = clock();
+    
     tid = (pthread_t *)malloc(sizeof(pthread_t)*nthr);
+    
+    
+    nThreads = nthr;
+    
+    int idx_threads[nthr];
     for (i = 0; i < nthr; i++){
-       pthread_create(&tid[i], NULL,(void*) calculate, &n);
-      }
-    for (i = 0; i < nthr; i++)
-       pthread_join(tid[i], NULL);
-	
-    printf("\nEncerrando programa...\n");
-    return 1;
+        idx_threads[i] = i;
+        pthread_create(&tid[i], NULL,(void*) calculate_rowsset, &idx_threads[i]);
+    }
+    
+    for (i = 0; i < nthr; i++){
+        pthread_join(tid[i], NULL);
+    }
+    
+    endClock = clock();
+    
+    printf("\n\tQuantidade de threads: %d", nthr);
+    printf("\n\tTempo de execucao: %f segundos",((float)endClock-startClock)/CLOCKS_PER_SEC);
+    
+    print_matrix(matrix_result);
+    
+    return SETUP_OK;
 }
-void *calculate(void *arg) {
-//Funcao que calcula linha x coluna = TODO
-//    int i, n = *(int *) arg;
-//    for(i = 0; i < n; i++){
-//        g = i;
-        printf("teste\n");
-//    }
 
-}
+
 
 

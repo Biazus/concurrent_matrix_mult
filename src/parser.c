@@ -1,17 +1,18 @@
 #include "../include/parser.h"
 
-int convert_file_to_c(char *filename, int row, int col, int matrix[row][col]){
+int convert_file_to_matrix(char *filename, tmatrix_t *matrix_in){
+    
     FILE *input;
-    char *mode = "r", *line = NULL;
+    char *line = NULL;
     char* token=NULL; //auxiliar para capturar cada valor de col da matriz
     char* line_copy=NULL;  //copia a string da linha pois strtok modifica a string
     size_t len = 0;
     ssize_t read;
     int row_counter=0, col_counter=0;
-    input=fopen(filename, mode);
+    input=fopen(filename, FILE_MODE_READ);
+    
     if (input==NULL){
-	printf("Erro ao ler arquivo\n");
-        return 0;
+        return READ_FILE_ERROR;
     }
     
     //para pegar as duas primeiras linhas que nao sao importantes aqui    
@@ -20,72 +21,149 @@ int convert_file_to_c(char *filename, int row, int col, int matrix[row][col]){
 
     //lê a linha do arquivo
     while((read = getline(&line, &len, input)) != -1){
-	line_copy = strdup(line);//copia para nova string
-	token = strtok(line_copy, " ");
-	while(token!=NULL){
-	    matrix[row_counter][col_counter]=atoi(token);
-		
-	    token = strtok(NULL, " ");
-	    col_counter+=1;
-	}
-	row_counter+=1;
+        line_copy = strdup(line);//copia para nova string
+        token = strtok(line_copy, " ");
+        while(token!=NULL){
+            matrix_in->matrix[row_counter][col_counter]=atoi(token);
+
+            token = strtok(NULL, " ");
+            col_counter++;
+        }
+        
+        if(col_counter-1>matrix_in->columns){
+            printf("  %d %d  ",col_counter,matrix_in->columns);
+            return READ_COLUMNS_ERROR;
+        }
+        
+        row_counter++;
         col_counter=0;
 
-	if(line_copy)
-	    free(line_copy);
+        if(line_copy){
+            free(line_copy);
+        }
 	
     }
-	int i=0,j=0;
+    
+    if(row_counter!=matrix_in->rows){
+        return READ_ROWS_ERROR;
+    }
+	
+    fclose(input);
+    
+    if(line){
+        free(line);
+    }
+    
+    return READ_FILE_OK;
+
+}
+
+int print_matrix(tmatrix_t *matrix_in){
+ 
+    int i=0,j=0;
     
     //print na matriz para debug
     printf("\nMATRIZ:\n");
-    for(i=0;i<row;i++){
-	for (j=0;j<col;j++)
-		printf("%d\t", matrix[i][j]);
+    for(i=0;i<matrix_in->rows;i++){
+	for (j=0;j<matrix_in->columns;j++)
+		printf("%d\t", matrix_in->matrix[i][j]);
         printf("\n");
     }
-
-    fclose(input);
-    if(line)
-	free(line);
-    return 1;
-
 }
-int get_row_and_column(char *file1, char *file2){
-//Essa funcao basicamente guarda os valores do numero de linhas e colunas especificados nos arquivos,
-//e verifica se são consistentes
-    int aux_row=0;
-    int aux_col=0;
+
+int get_row_and_column(char *file, tmatrix_t *matrix_in){
+
     FILE *input;
-    FILE *input2;
     ssize_t read;
     char *line = NULL;
     char trash[20];//variavel para guardar "lixo" do tipo (LINHAS = ) e (COLUNAS =)
     size_t len = 0;
+    
+    int read_rows, read_columns;
 
-    input = fopen(file1, "r");
+    input = fopen(file, "r");
     if (input==NULL){
-	printf("Erro ao ler arquivo1\n");
-        return 0;
+        return READ_FILE_ERROR;
     }
-    input2 = fopen(file2, "r");
-    if (input==NULL){
-	printf("Erro ao ler arquivo2\n");
-        return 0;
+    
+    read = getline(&line, &len, input);
+    sscanf(line, "%s %*s %d",trash,  &read_rows);
+    read = getline(&line, &len, input);
+    sscanf(line, "%s %*s %d",trash,  &read_columns);
+    
+    matrix_in->rows = read_rows;
+    matrix_in->columns = read_columns;
+    
+    if(line){
+        free(line);
     }
-    read = getline(&line, &len, input);
-    sscanf(line, "%s %*s %d",trash,  &number_of_rows);
-    read = getline(&line, &len, input);
-    sscanf(line, "%s %*s %d",trash,  &number_of_columns);
-     
-    read = getline(&line, &len, input2);
-    sscanf(line, "%s %*s %d",trash,  &aux_row);
-    read = getline(&line, &len, input2);
-    sscanf(line, "%s %*s %d",trash,  &aux_col);
+    
+    fclose(input);
+    
+    return READ_FILE_OK;
+    
+}
 
-    if(number_of_columns!=aux_row || number_of_rows!=aux_col){
-    	printf("\nErro nas dimensoes da matriz\n");
-	return 0;
+void create_matrix(tmatrix_t *matrix_in){
+    
+    int i;
+    matrix_in->matrix = (int**)malloc(sizeof(int)*matrix_in->rows);
+    for(i=0;i<matrix_in->rows;i++){
+        matrix_in->matrix[i] = (int*)malloc(sizeof(int)*matrix_in->columns);
     }
-    return 1;
+}
+
+
+void *calculate_first() {
+    
+    int find = 0;
+    int i,j,k;
+    
+    while(1){
+        
+        for(i=0;i<matrix_result->rows;i++){
+            for(j=0;j<matrix_result->columns;j++){
+                if(matrix_result->matrix[i][j]==-1){
+                    find = !find;
+                    break;
+                }
+            }
+            if(find) break;
+        }
+        
+        if(!find){
+            break;
+        }
+        else{
+            find = !find;
+        }
+        
+        matrix_result->matrix[i][j] = 0;
+        for(k=0;k<matrix_in1->columns;k++){
+                matrix_result->matrix[i][j]+=matrix_in1->matrix[i][k]*matrix_in2->matrix[k][j];
+        }
+    }
+        
+
+}
+
+
+void *calculate_rowsset(int *arg){
+    
+    int idx = (int)*arg;
+    int i,j,k;
+    printf("n%d\n",idx);
+    
+    
+    for(i=idx;i<matrix_in1->rows;i=i+nThreads){
+        for(j=0;j<matrix_result->columns;j++){
+            for(k=0;k<matrix_in1->columns;k++){
+                    matrix_result->matrix[i][j]+=matrix_in1->matrix[i][k]*matrix_in2->matrix[k][j];
+            }
+        }
+    }
+    
+    
+    
+    
 }
