@@ -106,9 +106,9 @@ int get_row_and_column(char *file, tmatrix_t *matrix_in){
 
 void create_matrix(tmatrix_t *matrix_in){
     
-    int i;
-    matrix_in->matrix = (int**)malloc(sizeof(int)*matrix_in->rows);
-    for(i=0;i<matrix_in->rows;i++){
+    int i=0;
+    matrix_in->matrix = (int**)malloc(sizeof(int*)*matrix_in->rows);
+    for(i;i<matrix_in->rows;i++){
         matrix_in->matrix[i] = (int*)malloc(sizeof(int)*matrix_in->columns);
     }
 }
@@ -163,7 +163,34 @@ void *calculate_rowsset(int *arg){
         }
     }
     
-    
-    
-    
 }
+
+int export_file(tmatrix_t *matrix, char *filename){
+
+    int i=0;
+    FILE *pfile = fopen(filename, FILE_MODE_WRITE);
+    
+    if(pfile == NULL){
+        return EXPORT_ERROR;
+    }
+    fprintf(pfile, "LINHAS = %d\nCOLUNAS = %d",matrix->rows,matrix->columns);
+    
+    for(i;i<matrix->rows;i++){
+        
+        fprintf(pfile,"\n");
+        
+        int j=0;
+        for(j;j<matrix->columns;j++){
+            fprintf(pfile,"%d ",matrix->matrix[i][j]);
+        }
+        
+    }
+    
+    fclose(pfile);
+    
+    return EXPORT_OK;
+}
+
+
+
+

@@ -44,18 +44,20 @@ int setup(int nthr){
     
     create_matrix(matrix_in1);
     create_matrix(matrix_in2);
-    
+        
     create_matrix(matrix_result);
+    
+    // este trecho esta dando seg fault
+    printf("Matrix resultado\n\tLinhas: %d\n\tColunas: %d",matrix_result->rows, matrix_result->columns);
+    
     int i,j;
     for(i=0;i<matrix_result->rows;i++){
         for(j=0;j<matrix_result->columns;j++){
             matrix_result->matrix[i][j]=0;
         }
     }
-    
-    
+        
     int ret;
-    
     ret = convert_file_to_matrix(FILE_IN1, matrix_in1);
     
     if (ret != READ_FILE_OK){
@@ -132,6 +134,12 @@ int setup(int nthr){
     printf("\n\tTempo de execucao: %f segundos",((float)endClock-startClock)/CLOCKS_PER_SEC);
     
     print_matrix(matrix_result);
+    
+    if(export_file(matrix_result, OUTPUT_FILE_NAME)!=EXPORT_OK){
+        
+        printf("Erro ao realizar a exportacao da matrix resultante.");
+        return SETUP_OK;
+    }
     
     return SETUP_OK;
 }
