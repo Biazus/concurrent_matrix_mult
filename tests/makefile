@@ -13,6 +13,6 @@ parser.o: ../src/parser.c
 	@gcc -c ../src/parser.c -o ../bin/parser.o
 
 clean:
-	@rm -rf ../bin/*
+	@rm -rf ../bin/*.o
 	@rm -rf ../lib/libutil.a
 
