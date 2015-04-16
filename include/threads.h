@@ -2,8 +2,8 @@
 #include <pthread.h>
 #include <time.h>
 
-#define SETUP_ERROR 0
-#define SETUP_OK 1
+#define SETUP_ERROR 1
+#define SETUP_OK 0
 
 time_t startClock, endClock;
 
