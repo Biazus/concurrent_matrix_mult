@@ -173,17 +173,16 @@ int export_file(tmatrix_t *matrix, char *filename){
     if(pfile == NULL){
         return EXPORT_ERROR;
     }
-    fprintf(pfile, "LINHAS = %d\nCOLUNAS = %d",matrix->rows,matrix->columns);
+    fprintf(pfile, "LINHAS = %d\nCOLUNAS = %d\n",matrix->rows,matrix->columns);
     
     for(i;i<matrix->rows;i++){
-        
-        fprintf(pfile,"\n");
         
         int j=0;
         for(j;j<matrix->columns;j++){
             fprintf(pfile,"%d ",matrix->matrix[i][j]);
         }
         
+        fprintf(pfile,"\n");
     }
     
     fclose(pfile);
