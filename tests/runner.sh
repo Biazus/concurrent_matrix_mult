@@ -1,4 +1,4 @@
 #!/bin/bash
 
 make all;
-../bin/run
+../bin/run-threads

@@ -1,8 +1,11 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 
-#include "../include/parser.h"
+#include "parser.h"
 #include <stddef.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 int
 matrix_load(tmatrix_t *matrix,

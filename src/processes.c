@@ -6,9 +6,7 @@ Names:FELIPE BUENO DA ROSA
 Operating Systems 2 - Prof Alberto
 THREADS
 */
-
-#include "../include/parser.h"
-#include "../include/matrix.h"
+#include "../include/processes.h"
 
 int
 setup(int nthr)
@@ -28,6 +26,12 @@ setup(int nthr)
 	matrix_create(&product, multiplicand.rows, multiplier.columns);
 
     matrix_multiply_concurrently(multiplicand, multiplier, nthr, &product);
-
+    
+    if(export_file(&product, OUTPUT_FILE_NAME)!=EXPORT_OK){
+        
+        printf("Erro ao realizar a exportacao da matrix resultante.");
+        return SETUP_ERROR;
+    }
+    
 	return SETUP_OK;
 }

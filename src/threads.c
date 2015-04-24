@@ -47,9 +47,6 @@ int setup(int nthr){
         
     create_matrix(matrix_result);
     
-    // este trecho esta dando seg fault
-    printf("Matrix resultado\n\tLinhas: %d\n\tColunas: %d",matrix_result->rows, matrix_result->columns);
-    
     int i,j;
     for(i=0;i<matrix_result->rows;i++){
         for(j=0;j<matrix_result->columns;j++){
@@ -82,7 +79,7 @@ int setup(int nthr){
         
         return SETUP_ERROR;
     }
-    print_matrix(matrix_in1);
+    //print_matrix(matrix_in1);
     
     ret = convert_file_to_matrix(FILE_IN2, matrix_in2);
     if (ret != READ_FILE_OK){
@@ -107,10 +104,10 @@ int setup(int nthr){
         
         return SETUP_ERROR;
     }
-    print_matrix(matrix_in2);
+    //print_matrix(matrix_in2);
     
     
-    printf("\n\nIniciando execucao - algoritmo calculate_rowsset...\n");
+    //printf("\n\nIniciando execucao - algoritmo calculate_rowsset...\n");
     startClock = clock();
     
     tid = (pthread_t *)malloc(sizeof(pthread_t)*nthr);
@@ -130,15 +127,15 @@ int setup(int nthr){
     
     endClock = clock();
     
-    printf("\n\tQuantidade de threads: %d", nthr);
-    printf("\n\tTempo de execucao: %f segundos",((float)endClock-startClock)/CLOCKS_PER_SEC);
+    // printf("\n\tQuantidade de threads: %d", nthr);
+    // printf("\n\tTempo de execucao: %f segundos",((float)endClock-startClock)/CLOCKS_PER_SEC);
     
-    print_matrix(matrix_result);
+    // print_matrix(matrix_result);
     
     if(export_file(matrix_result, OUTPUT_FILE_NAME)!=EXPORT_OK){
         
         printf("Erro ao realizar a exportacao da matrix resultante.");
-        return SETUP_OK;
+        return SETUP_ERROR;
     }
     
     return SETUP_OK;

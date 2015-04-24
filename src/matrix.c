@@ -1,9 +1,4 @@
-#include "../include/parser.h"
-#include "matrix.h"
-#include <stddef.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include "../include/matrix.h"
 
 int
 matrix_load(tmatrix_t *matrix,
