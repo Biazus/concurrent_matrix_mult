@@ -13,11 +13,13 @@
 
 #define FILE_MODE_READ "r"
 #define FILE_MODE_WRITE "w"
+#define FILE_MODE_APPEND "a+"
 
-#define FILE_IN1 "../tests/in1.txt"
-#define FILE_IN2 "../tests/in2.txt"
-#define FILE_IN1_LOC_PATH "in1.txt"
-#define FILE_IN2_LOC_PATH "in2.txt"
+#define FILE_IN1 "in1.txt"
+#define FILE_IN2 "in2.txt"
+
+#define FILE_REPORT "../report.txt"
+
 
 #define OUTPUT_FILE_NAME "out.txt"
 
@@ -44,6 +46,15 @@ int convert_file_to_matrix(char *filename, tmatrix_t *matrix_in);
 int print_matrix(tmatrix_t *matrix_in);
 
 int export_file(tmatrix_t *matrix, char *filename);
+int export_report(char *report, char type
+                  , int rows_in1
+                  , int columns_in1
+                  , int rows_in2
+                  , int columns_in2
+                  , int rows_out
+                  , int columns_out
+                  , int cores
+                  , float time);
 
 void *calculate_first();
 void *calculate_rowsset(int *arg);

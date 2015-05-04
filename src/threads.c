@@ -34,10 +34,7 @@ int setup(int nthr){
         printf("Quantidade de linhas em in1 diferente da quantidade de colunas em in2.");
         return SETUP_ERROR;
     }
-    if(matrix_in1->columns != matrix_in2->rows){
-        printf("Quantidade de linhas em in2 diferente da quantidade de colunas em in1.");
-        return SETUP_ERROR;
-    }
+    
     
     matrix_result->rows = matrix_in1->rows;
     matrix_result->columns = matrix_in2->columns;
@@ -131,7 +128,18 @@ int setup(int nthr){
     // printf("\n\tTempo de execucao: %f segundos",((float)endClock-startClock)/CLOCKS_PER_SEC);
     
     // print_matrix(matrix_result);
-    
+    /*
+    export_report(FILE_REPORT
+                  , 'T'
+                  , matrix_in1->rows
+                  , matrix_in1->columns
+                  , matrix_in2->rows
+                  , matrix_in2->columns
+                  , matrix_result->rows
+                  , matrix_result->columns
+                  , nthr
+                  , ((float)endClock-startClock)/CLOCKS_PER_SEC);
+    */
     if(export_file(matrix_result, OUTPUT_FILE_NAME)!=EXPORT_OK){
         
         printf("Erro ao realizar a exportacao da matrix resultante.");

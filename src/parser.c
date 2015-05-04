@@ -152,14 +152,26 @@ void *calculate_rowsset(int *arg){
     
     int idx = (int)*arg;
     int i,j,k;
+    
+    int lin_a, col_a;
     printf("n%d\n",idx);
     
-    
+    /*
     for(i=idx;i<matrix_in1->rows;i=i+nThreads){
-        for(j=0;j<matrix_result->columns;j++){
+        for(j=0;j<matrix_in2->columns;j++){
             for(k=0;k<matrix_in1->columns;k++){
                     matrix_result->matrix[i][j]+=matrix_in1->matrix[i][k]*matrix_in2->matrix[k][j];
             }
+        }
+    }
+    */
+    for(i=idx;i<matrix_result->rows*matrix_result->columns;i=i+nThreads){
+        
+        lin_a = i / matrix_in2->columns;
+        col_b = i % matrix_in2->columns;
+        
+        for(k=0;k<matrix_in1->columns;k++){
+            matrix_result->matrix[lin_a][col_b]+=matrix_in1->matrix[lin_a][k]*matrix_in2->matrix[k][col_b];
         }
     }
     
@@ -190,6 +202,36 @@ int export_file(tmatrix_t *matrix, char *filename){
     return EXPORT_OK;
 }
 
+int export_report(char *report
+                  , char type
+                  , int rows_in1
+                  , int columns_in1
+                  , int rows_in2
+                  , int columns_in2
+                  , int rows_out
+                  , int columns_out
+                  , int cores
+                  , float time){
 
+    int i=0;
+    FILE *pfile = fopen(report, FILE_MODE_APPEND);
+    
+    if(pfile == NULL){
+        return EXPORT_ERROR;
+    }
+    fprintf(pfile, "%c \t ", type);
+    fprintf(pfile, "%d \t ", rows_in1);
+    fprintf(pfile, "%d \t ", columns_in1);
+    fprintf(pfile, "%d \t ", rows_in2);
+    fprintf(pfile, "%d \t ", columns_in2);
+    fprintf(pfile, "%d \t ", rows_out);
+    fprintf(pfile, "%d \t ", columns_out);
+    fprintf(pfile, "%d \t ", cores);
+    fprintf(pfile, "%3.5f\n" , time);
+    
+    fclose(pfile);
+    
+    return EXPORT_OK;
+}
 
 
