@@ -30,8 +30,8 @@ int setup(int nthr){
         
     }
     
-    if(matrix_in1->rows != matrix_in2->columns){
-        printf("Quantidade de linhas em in1 diferente da quantidade de colunas em in2.");
+    if(matrix_in1->columns != matrix_in2->rows){
+        printf("Quantidade de colunas em in1 diferente da quantidade de linhas em in2.");
         return SETUP_ERROR;
     }
     

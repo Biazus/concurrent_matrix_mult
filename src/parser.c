@@ -156,22 +156,12 @@ void *calculate_rowsset(int *arg){
     int lin_a, col_a;
     printf("n%d\n",idx);
     
-    /*
+    
     for(i=idx;i<matrix_in1->rows;i=i+nThreads){
         for(j=0;j<matrix_in2->columns;j++){
             for(k=0;k<matrix_in1->columns;k++){
                     matrix_result->matrix[i][j]+=matrix_in1->matrix[i][k]*matrix_in2->matrix[k][j];
             }
-        }
-    }
-    */
-    for(i=idx;i<matrix_result->rows*matrix_result->columns;i=i+nThreads){
-        
-        lin_a = i / matrix_in2->columns;
-        col_b = i % matrix_in2->columns;
-        
-        for(k=0;k<matrix_in1->columns;k++){
-            matrix_result->matrix[lin_a][col_b]+=matrix_in1->matrix[lin_a][k]*matrix_in2->matrix[k][col_b];
         }
     }
     
