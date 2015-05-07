@@ -58,13 +58,12 @@ matrix_multiply_concurrently(const tmatrix_t multiplicand,
 
             close(pipefds[p][0]);
 			matrix_write_through_pipe(pipefds[p], &product_stripe);
-
 			exit(0);
 		} else {
 			pids[p] = pid;
 		}
 	}
-
+    
 	for (p = 0; p != num_processes; p++) {
 		close(pipefds[p][1]);
 		matrix_read_through_pipe(pipefds[p], &product_stripes[p]);
@@ -129,7 +128,6 @@ matrix_multiply(const tmatrix_t multiplicand,
 	size_t r;
 	size_t c;
 	size_t k;
-
 	for (r = 0; r != multiplicand.rows; r++) {
 		for (c = 0; c != multiplier.columns; c++) {
 			product->matrix[r][c] = 0;

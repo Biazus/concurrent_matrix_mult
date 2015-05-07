@@ -18,7 +18,7 @@
 #define FILE_IN1 "in1.txt"
 #define FILE_IN2 "in2.txt"
 
-#define FILE_REPORT "../report.txt"
+#define FILE_REPORT "report.txt"
 
 
 #define OUTPUT_FILE_NAME "out.txt"

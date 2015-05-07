@@ -22,16 +22,29 @@ setup(int nthr)
 	if (!matrix_load(&multiplier, FILE_IN2)) {
 		return SETUP_ERROR;
 	}
-
+    
+    startClock = clock();
 	matrix_create(&product, multiplicand.rows, multiplier.columns);
 
     matrix_multiply_concurrently(multiplicand, multiplier, nthr, &product);
+    endClock = clock();
     
     if(export_file(&product, OUTPUT_FILE_NAME)!=EXPORT_OK){
         
         printf("Erro ao realizar a exportacao da matrix resultante.");
         return SETUP_ERROR;
     }
+    
+    export_report(FILE_REPORT
+                  , 'P'
+                  , multiplicand.rows
+                  , multiplicand.columns
+                  , multiplier.rows
+                  , multiplier.columns
+                  , product.rows
+                  , product.columns
+                  , nthr
+                  , ((float)endClock-startClock)/CLOCKS_PER_SEC);
     
 	return SETUP_OK;
 }

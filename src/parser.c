@@ -154,7 +154,7 @@ void *calculate_rowsset(int *arg){
     int i,j,k;
     
     int lin_a, col_a;
-    printf("n%d\n",idx);
+    //printf("n%d\n",idx);
     
     
     for(i=idx;i<matrix_in1->rows;i=i+nThreads){

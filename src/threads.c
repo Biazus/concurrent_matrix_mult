@@ -128,7 +128,7 @@ int setup(int nthr){
     // printf("\n\tTempo de execucao: %f segundos",((float)endClock-startClock)/CLOCKS_PER_SEC);
     
     // print_matrix(matrix_result);
-    /*
+    
     export_report(FILE_REPORT
                   , 'T'
                   , matrix_in1->rows
@@ -139,7 +139,7 @@ int setup(int nthr){
                   , matrix_result->columns
                   , nthr
                   , ((float)endClock-startClock)/CLOCKS_PER_SEC);
-    */
+    
     if(export_file(matrix_result, OUTPUT_FILE_NAME)!=EXPORT_OK){
         
         printf("Erro ao realizar a exportacao da matrix resultante.");

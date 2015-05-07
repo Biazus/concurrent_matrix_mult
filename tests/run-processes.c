@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
     if(argc>1){
         nthr = atoi(argv[1]);
         
-        printf("Numero de threads: %d", nthr);
+        //printf("Numero de Processos: %d", nthr);
     }
     else {
         printf("Digite o numero de processos: ");
